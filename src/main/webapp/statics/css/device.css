@@ -1,0 +1,35 @@
+.device_table {
+    margin-top: 30px;
+    margin-left: 30px;
+    width: 60%;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    text-align: center;
+}
+
+.device_title_tr {
+    font-weight: bold;
+    color: black;
+}
+
+.device_value_tr {
+    color: green;
+}
+
+.device_td {
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+}
+
+.device_div {
+    margin-top: 10px;
+    margin-left: 30px;
+    width: 60%;
+    text-align: left;
+}
+
+#div_chart {
+    margin-top: 10px;
+    margin-left: 30px;
+    width: 60%;
+}
