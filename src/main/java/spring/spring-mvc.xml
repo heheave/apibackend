@@ -30,10 +30,26 @@
     <!--但是项目部署到linux下发现WEB-INF的静态资源会出现无法解析的情况，但是本地tomcat访问正常，因此建议还是直接把静态资源放在webapp的statics下，映射配置如下-->
     <mvc:resources mapping="/css/**" location="/statics/css/"/>
     <mvc:resources mapping="/js/**" location="/statics/js/"/>
-    <mvc:resources mapping="/image/**" location="/statics/images/"/>
-
+    <mvc:resources mapping="/images/**" location="/statics/images/"/>
+    <mvc:resources mapping="/bs/**" location="/statics/bstrap/"/>
     <!-- 配置注解驱动 可以将request参数与绑定到controller参数上 -->
     <mvc:annotation-driven/>
+
+    <mvc:interceptors>
+        <!-- 多个拦截器，顺序执行 -->
+        <mvc:interceptor>
+            <!-- /** 表示所有的url，包括子url路径 -->
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/login/**"/>
+            <mvc:exclude-mapping path="/css/**"/>
+            <mvc:exclude-mapping path="/js/**"/>
+            <mvc:exclude-mapping path="/images/**"/>
+            <mvc:exclude-mapping path="/bs/**"/>
+            <mvc:exclude-mapping path="/fi/**"/>
+            <bean class="com.sjtu.intercepter.AuthInterceptor"></bean>
+
+        </mvc:interceptor>
+    </mvc:interceptors>
 
     <!-- 对模型视图名称的解析，即在模型视图名称添加前后缀(如果最后一个还是表示文件夹,则最后的斜杠不要漏了) 使用JSP-->
     <!-- 默认的视图解析器 在上边的解析错误时使用 (默认使用html)- -->
@@ -56,13 +72,21 @@
     <bean class="com.sjtu.deamon.LauncherStop"/>
 
     <!-- for service -->
+    <bean class="com.sjtu.service.AppDeviceService"/>
+    <bean class="com.sjtu.service.AppGroupService"/>
+    <bean class="com.sjtu.service.AppService"/>
+    <bean class="com.sjtu.service.AppShowService"/>
+    <!-- <bean class="com.sjtu.service.DeviceConfigService"/> -->
     <bean class="com.sjtu.service.DeviceService"/>
-    <bean class="com.sjtu.service.DeviceConfigService"/>
+    <bean class="com.sjtu.service.DeviceMonitorService"/>
+    <bean class="com.sjtu.service.ConfigEntryService"/>
+    <bean class="com.sjtu.service.UserService"/>
+    <bean class="com.sjtu.service.PointerService"/>
 
     <!-- for dao -->
     <bean id = "dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
         <property name="driverClass"><value>com.mysql.jdbc.Driver</value></property>
-        <property name="jdbcUrl"><value>jdbc:mysql://localhost:3306/device?useUnicode=true&amp;characterEncoding=utf8</value></property>
+        <property name="jdbcUrl"><value>jdbc:mysql://localhost:3306/saas?useUnicode=true&amp;characterEncoding=utf8</value></property>
         <property name="user"><value>root</value></property>
         <property name="password"><value>heheave</value></property>
         <property name="maxPoolSize"><value>40</value></property>
@@ -74,7 +98,18 @@
         <property name="acquireRetryAttempts"><value>30</value></property>
     </bean>
 
-    <bean id = "redisDAO" class="com.sjtu.dao.RedisDAO"/>
-    <bean id = "deviceConfigDAO" class="com.sjtu.dao.DeviceConfigDAO"/>
+    <bean class="com.sjtu.dao.CacheDAO"/>
+
+    <bean class="com.sjtu.dao.AppDAO"/>
+    <bean class="com.sjtu.dao.AppDeviceDAO"/>
+    <bean class="com.sjtu.dao.AppGroupDAO"/>
+    <bean class="com.sjtu.dao.AppShowDAO"/>
+    <bean class="com.sjtu.dao.DeviceConfigDAO"/>
+    <bean class="com.sjtu.dao.RedisDAO"/>
+    <bean class="com.sjtu.dao.DeviceDAO"/>
+    <bean class="com.sjtu.dao.DeviceMonitorDAO"/>
+    <bean class="com.sjtu.dao.ConfigEntryDAO"/>
+    <bean class="com.sjtu.dao.UserDAO"/>
+    <bean class="com.sjtu.dao.PointerDAO"/>
 
 </beans>

@@ -1,0 +1,7 @@
+.canvas {
+	width: 600px;
+	height: 350px;
+	position: relative;
+	margin: 200px auto;
+	background-color: white;
+}

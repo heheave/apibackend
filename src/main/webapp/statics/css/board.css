@@ -1,0 +1,161 @@
+.container {
+	height: 1000px;
+	margin: 0px 0px;
+	position: relative;
+	text-align: center;
+	background: -moz-linear-gradient(top, #89c7e4, #f1f1f1);
+	background: -o-linear-gradient(top, #89c7e4, #f1f1f1);
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#89c7e4),
+		to(#f1f1f1) );
+	filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#89c7e4',
+		endColorStr='#f1f1f1', gradientType='0' );
+	border: 1px solid white;
+}
+
+.canvas {
+	width: 400px;
+	height: 300px;
+	margin: 200px auto;
+	background-color: white;
+}
+
+.title {
+	width: 100%;
+	height: 50px;
+	margin-bottom: 50px;
+	background-color: #459fc7;
+	color: white;
+	font-size: 18px;
+	text-align: center;
+	line-height: 50px;
+	font-family: "Microsoft YaHei" ! important;
+}
+
+.title1 {
+	width: auto;
+	height: 50px;
+	margin-top: 30px;
+	margin-left: 30px;
+	margin-right: 30px;
+	padding-left: 10px;
+	color: black;
+	font-weight: bold;
+	font-size: 18px;
+	text-align: left;
+	line-height: 50px;
+	font-family: "Microsoft YaHei" ! important;
+	border-bottom: 2px solid black;
+}
+
+.input_div {
+	margin-top: 30px;
+	margin-left: 20px;
+	margin-right: 30px;
+	font-size: 18px;
+	text-align: right;
+	line-height: 30px;
+	font-family: "Microsoft YaHei" ! important;
+}
+
+.input_cell {
+	width: 50%;
+	height: 100%;
+	display: inine-block;
+	position: relative;
+	float: left;
+}
+
+.input_div input {
+	width: 70%;
+	height: 100%;
+	display: inine-block;
+	font-size: 18px;
+	text-align: left;
+	line-height: 30px;
+	font-family: "Microsoft YaHei" ! important;
+	color: gray;
+}
+
+.input_div select {
+	width: 70%;
+	height: 100%;
+	display: inine-block;
+	font-size: 18px;
+	text-align: left;
+	line-height: 30px;
+	font-family: "Microsoft YaHei" ! important;
+	color: black;
+}
+
+
+.myinput_div {
+	margin-top: 30px;
+	margin-left: 0px;
+	margin-right: 60px;
+	margin-bottom: 30px;
+	height: 30px;
+	font-size: 18px;
+	text-align: right;
+	line-height: 30px;
+	position: relative;
+	font-family: "Microsoft YaHei" ! important;
+}
+
+.myinput_cell {
+	width: 50%;
+	height: 100%;
+	display: inine-block;
+	position: relative;
+	float: left;
+}
+
+.myinput_cell_long {
+	width: 100%;
+	height: 100%;
+	display: inine-block;
+	position: relative;
+	float: left;
+}
+
+.myinput_cell div {
+	width: 60%;
+	height: 100%;
+	display: inine-block;
+	font-size: 18px;
+	text-align: left;
+	line-height: 30px;
+	color: gray;
+	font-family: "Microsoft YaHei" ! important;
+	float: right;
+}
+
+.myinput_cell_long div {
+	width: 80%;
+	height: 100%;
+	display: inine-block;
+	font-size: 18px;
+	text-align: left;
+	line-height: 30px;
+	color: gray;
+	font-family: "Microsoft YaHei" ! important;
+	float: right;
+}
+
+.bottom_btn {
+	margin-top: 50px;
+}
+
+.bottom_btn button {
+	margin-bottom: 30px;
+}
+
+.hint{
+	width: 800px;
+	height: 100px;
+	positon: relative;
+	margin: 300px auto;
+	font-size:30px;
+	text-align: center;
+	line-height: 50px;
+	font-family: "Microsoft YaHei" ! important;
+}

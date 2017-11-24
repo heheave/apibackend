@@ -1,0 +1,14 @@
+.container {
+    height: auto;
+}
+
+.canvas {
+	width: 800px;
+	height: auto;
+	margin: 200px auto;
+	background-color: white;
+}
+
+.scss_table {
+    margin-top: 0px;
+}

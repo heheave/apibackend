@@ -17,4 +17,20 @@ public class RetStat {
     public String getStat() {
         return stat;
     }
+
+    public boolean isSucc() {
+        return !"Failed".equals(stat);
+    }
+
+    public boolean isFailed() {
+        return !isSucc();
+    }
+
+    public static final RetStat apply(String stat) {
+        if (stat == null) {
+            return FAILED;
+        } else {
+            return new RetStat(stat);
+        }
+    }
 }

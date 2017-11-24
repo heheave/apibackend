@@ -11,11 +11,11 @@ import java.util.Date;
  */
 public class AvgTimeFormat {
 
-    private static final SimpleDateFormat min = new SimpleDateFormat("yyyy_MM_dd_HH_mm");
+    private static final SimpleDateFormat min = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-    private static final SimpleDateFormat hour = new SimpleDateFormat("yyyy_MM_dd_HH");
+    private static final SimpleDateFormat hour = new SimpleDateFormat("yyyy-MM-dd HH");
 
-    private static final SimpleDateFormat day = new SimpleDateFormat("yyyy_MM_dd");
+    private static final SimpleDateFormat day = new SimpleDateFormat("yyyy-MM-dd");
 
     public static String formatTime(long timestamp, String avgType) {
         String formatedTimeStr = null;

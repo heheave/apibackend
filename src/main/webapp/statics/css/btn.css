@@ -1,0 +1,42 @@
+.bottom_btn {
+	margin-top: 80px;
+	margin-left: 20px;
+	margin-right: 20px;
+	margin-bottom: 30px;
+	text-align: center;
+	position: relative;
+}
+
+.mybutton {
+	width: 95px;
+	height: 30px;
+	margin-left: 15px;
+	margin-right: 15px;
+	font-family: "Microsoft YaHei" ! important;
+	background: url("../images/btn_bg.png") center center no-repeat;
+	background-size: cover;
+	border: none;
+	color: white;
+	cursor: pointer;
+	text-align: center;
+	line-height: 30px;
+	font-family: "Microsoft YaHei" ! important;
+}
+
+
+.mybutton1 {
+    width: 95px;
+	height: 30px;
+	margin-top: 10px;
+    margin-right: 0px;
+	font-family: "Microsoft YaHei" ! important;
+	background: url("../images/btn_bg.png") center center no-repeat;
+	background-size: cover;
+	border: none;
+	color: white;
+	cursor: pointer;
+	text-align: center;
+	line-height: 30px;
+	font-family: "Microsoft YaHei" ! important;
+	float: right;
+}

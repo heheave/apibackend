@@ -7,19 +7,7 @@ import java.util.List;
  */
 public class DeviceValue {
 
-    private String id;
-
-    private String mtype;
-
-    private String dtype;
-
-    private String desc;
-
-    private String company;
-
-    private double locLong;
-
-    private double locDim;
+    private String dmark;
 
     private long dtimestamp;
 
@@ -29,47 +17,43 @@ public class DeviceValue {
 
     private List<Value> values;
 
-    public String getId() {
-        return id;
+    public String getDmark() {
+        return dmark;
     }
 
-    public String getMtype() {
-        return mtype;
-    }
-
-    public String getDtype() {
-        return dtype;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public String getCompany() {
-        return company;
-    }
-
-    public double getLocLong() {
-        return locLong;
-    }
-
-    public double getLocDim() {
-        return locDim;
+    public void setDmark(String dmark) {
+        this.dmark = dmark;
     }
 
     public long getDtimestamp() {
         return dtimestamp;
     }
 
+    public void setDtimestamp(long dtimestamp) {
+        this.dtimestamp = dtimestamp;
+    }
+
     public long getPtimestamp() {
         return ptimestamp;
+    }
+
+    public void setPtimestamp(long ptimestamp) {
+        this.ptimestamp = ptimestamp;
     }
 
     public int getPortNum() {
         return portNum;
     }
 
+    public void setPortNum(int portNum) {
+        this.portNum = portNum;
+    }
+
     public List<Value> getValues() {
         return values;
+    }
+
+    public void setValues(List<Value> values) {
+        this.values = values;
     }
 }

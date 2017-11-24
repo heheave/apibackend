@@ -1,7 +1,5 @@
 package com.sjtu.avgcache;
 
-import com.sjtu.accessor.AccessorFactory;
-import com.sjtu.accessor.RedisAccess;
 import com.sjtu.dao.RedisDAO;
 import com.sjtu.util.SerializeUtil;
 
@@ -12,9 +10,9 @@ public class AvgCacheManager {
 
     private static final RedisDAO ra = new RedisDAO();
 
-    public static AvgCacheValue put(String did, int pidx, String avgType, String avgMark, double sum, int num) {
+    public static AvgCacheValue put(String pid, String avgName, String avgMark, double sum, int num) {
         AvgCacheValue retV = null;
-        AvgCacheKey key = new AvgCacheKey(did, pidx, avgType);
+        AvgCacheKey key = new AvgCacheKey(pid, avgName);
         byte[] bkey = SerializeUtil.serialize(key);
         if (bkey == null) {
             retV =  null;
@@ -41,8 +39,8 @@ public class AvgCacheManager {
         return retV;
     }
 
-    public static AvgCacheValue get(String did, int pidx, String avgType) {
-        AvgCacheKey key = new AvgCacheKey(did, pidx, avgType);
+    public static AvgCacheValue get(String pid, String avgName) {
+        AvgCacheKey key = new AvgCacheKey(pid, avgName);
         byte[] bkey = SerializeUtil.serialize(key);
         if (bkey != null) {
             byte[] tmpV = ra.get(bkey);

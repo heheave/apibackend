@@ -1,0 +1,49 @@
+.scss_table {
+    margin-top: 30px;
+    margin-left: 30px;
+    width: 92.5%;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    text-align: center;
+}
+
+.scss_title_tr {
+    font-weight: bold;
+    color: black;
+}
+
+.scss_value_tr {
+    color: green;
+}
+
+.scss_td {
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+}
+
+.scss_div {
+    margin-top: 10px;
+    margin-left: 30px;
+    width: 100%;
+    text-align: center;
+}
+
+.scss_ldiv {
+    margin-top: 10px;
+    margin-left: 30px;
+    width: 100%;
+    text-align: left;
+}
+
+.scss_rdiv {
+    margin-top: 10px;
+    margin-left: 30px;
+    width: 100%;
+    text-align: right;
+}
+
+.div_chart {
+    margin-top: 10px;
+    margin-left: 30px;
+    width: 92.5%;
+}

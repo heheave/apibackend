@@ -4,7 +4,6 @@ import com.sjtu.avgcache.AvgCacheManager;
 import com.sjtu.avgcache.AvgCacheValue;
 import com.sjtu.avgcache.AvgTimeFormat;
 import com.sjtu.config.Configure;
-import com.sjtu.config.JsonField;
 import com.sjtu.config.V;
 import com.sjtu.dao.RedisDAO;
 import com.sjtu.deamon.service.AbstractorDeamonService;
@@ -17,7 +16,10 @@ import kafka.message.MessageAndMetadata;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -38,7 +40,9 @@ public class KafkaService extends AbstractorDeamonService{
 
     private final String kafkaAvgTopic;
 
-    private final int kafkaConsumerThreads;
+    private final int kafkaRealtimeConsumerThreads;
+
+    private final int kafkaAvgConsumerThreads;
 
     private ConsumerConnector connector;
 
@@ -46,10 +50,11 @@ public class KafkaService extends AbstractorDeamonService{
         super();
         this.conf = conf;
         this.redisDAO = new RedisDAO();
-        this.kafkaRealtimeTopic = conf.getStringOrElse(V.KAFKA_REALTIME_TOPIC, "cleaned-data-topic");
-        this.kafkaAvgTopic = conf.getStringOrElse(V.KAFKA_AVG_TOPIC, "cleaned-avg-topic");
-        this.kafkaConsumerThreads = conf.getIntOrElse(V.KAFKA_CONSUMER_THREADS, 10);
-        this.executors = Executors.newFixedThreadPool(kafkaConsumerThreads + (kafkaConsumerThreads >> 2));
+        this.kafkaRealtimeTopic = conf.getStringOrElse(V.KAFKA_REALTIME_TOPIC);
+        this.kafkaAvgTopic = conf.getStringOrElse(V.KAFKA_AVG_TOPIC);
+        this.kafkaRealtimeConsumerThreads = conf.getIntOrElse(V.KAFKA_REALTIME_CONSUMER_THREADS);
+        this.kafkaAvgConsumerThreads = conf.getIntOrElse(V.KAFKA_AVG_CONSUMER_THREADS);
+        this.executors = Executors.newFixedThreadPool(kafkaRealtimeConsumerThreads + kafkaAvgConsumerThreads);
     }
 
     @Override
@@ -58,8 +63,8 @@ public class KafkaService extends AbstractorDeamonService{
         connector = Consumer.createJavaConsumerConnector(config);
 
         Map<String, Integer> topicThreadsMap = new HashMap<String, Integer>();
-        topicThreadsMap.put(kafkaRealtimeTopic, kafkaConsumerThreads);
-        topicThreadsMap.put(kafkaAvgTopic, kafkaConsumerThreads >> 2);
+        topicThreadsMap.put(kafkaRealtimeTopic, kafkaRealtimeConsumerThreads);
+        topicThreadsMap.put(kafkaAvgTopic, kafkaAvgConsumerThreads);
         Map<String, List<KafkaStream<byte[], byte[]>>> kafkaStreams =
                 connector.createMessageStreams(topicThreadsMap);
         List<KafkaStream<byte[], byte[]>> topicStreams = kafkaStreams.get(kafkaRealtimeTopic);
@@ -74,7 +79,7 @@ public class KafkaService extends AbstractorDeamonService{
     }
 
     private void realtimeTaskSubmit(final KafkaStream<byte[], byte[]> stream) {
-        final int redisMaxListCache = conf.getIntOrElse(V.REDIS_LIST_MAX_NUM, 10);
+        final int redisMaxListCache = conf.getIntOrElse(V.REDIS_LIST_MAX_NUM);
         executors.submit(new Runnable() {
             public void run() {
                 ConsumerIterator<byte[], byte[]> iterator = stream.iterator();
@@ -91,16 +96,10 @@ public class KafkaService extends AbstractorDeamonService{
                         log.warn(String.format("Transfer %s to JSONObject error", message), e);
                     }
                     if (jo != null) {
-                        String id = jo.getString(JsonField.DeviceValue.ID);
-                        try {
-                            if (id != null) {
-                                log.info("info id is " + id);
-                                redisDAO.rpush(id, 10, message);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            log.equals(e);
-                        }
+                        log.info(jo.toString());
+                        //Code$Result cr = RedisKeyUtil.getKey(jo);
+                        String key = jo.get("pid").toString();
+                        redisDAO.rpush("real-" + key, 10, message);
                     }
                     //log.info("Thread id: " + Thread.currentThread().getId()+ ", key: " + key + ", massge: " + message + ", partition: " + partition);
                 }
@@ -125,18 +124,23 @@ public class KafkaService extends AbstractorDeamonService{
                         log.warn(String.format("Transfer %s to JSONObject error", message), e);
                     }
                     if (jo != null) {
-                        String avg = jo.getString(JsonField.DeviceValue.AVGTYPE);
-                        long pts = jo.getLong(JsonField.DeviceValue.PTIMESTAMP);
+                        log.info(jo.toString());
+                        String avg = jo.getString("avgName");
+                        long pts = jo.getLong("st");
                         String avgMark = AvgTimeFormat.formatTime(pts, avg);
                         if (avgMark != null) {
-                            String id = jo.getString(JsonField.DeviceValue.ID);
-                            log.info("info id is " + id + "-" + avgMark);
-                            int port = jo.getInt(JsonField.DeviceValue.PORTID);
-                            double sum = jo.getDouble(JsonField.DeviceValue.SUMV);
-                            int num = jo.getInt(JsonField.DeviceValue.NUMV);
-                            AvgCacheValue newAvg = AvgCacheManager.put(id, port, avg, avgMark, sum, num);
+                            String key = jo.get("pid").toString();
+                            //redisDAO.rpush("avg-" + key, 10, message);
+                            //String app = JOKeyGetUtil.getString(jo, JsonField.DeviceValue.APP);
+                            //String id = JOKeyGetUtil.getString(jo, JsonField.DeviceValue.ID);
+                            //if (app == null || id == null) return;
+                            //log.info("info id is " + id + "-" + avgMark);
+                            //int port = jo.getInt(JsonField.DeviceValue.PORTID);
+                            double sum = jo.getDouble("sum");
+                            int num = jo.getInt("num");
+                            AvgCacheValue newAvg = AvgCacheManager.put(key, avg, avgMark, sum, num);
                             if (newAvg != null) {
-                                log.info("new avg info is " + id + ":" + port + ":" + avgMark);
+                                log.info("new avg info is " + key + ":" + avg + ":" + avgMark);
                             }
                         }
                     }
@@ -146,15 +150,15 @@ public class KafkaService extends AbstractorDeamonService{
     }
 
     private ConsumerConfig createConsumerConfig() {
-        String zookeeper = conf.getStringOrElse(V.KAFKA_ZK_URL, "192.168.1.110:2181");
-        String broker = conf.getStringOrElse(V.KAFKA_BROKER_URL, "192.168.1.110:9092");
-        String groupId = conf.getStringOrElse(V.KAFKA_GROUP_ID, "WEB_CONSUMER_GROUP");
-        String autoOffsetReset = conf.getStringOrElse(V.KAFKA_AUTO_OFFSET_RESET, "largest");
-        String sessionTimeout = conf.getStringOrElse(V.KAFKA_ZK_SESSION_TIMEOUT, "7000");
-        String rbMaxRetries = conf.getStringOrElse(V.KAFKA_REBALANCE_MAX_RETRIES, "4");
-        String rbBackOff = conf.getStringOrElse(V.KAFKA_REBALANCE_BACKOFF, "2000");
-        String syncTime = conf.getStringOrElse(V.KAFKA_ZK_SYNC_TIME, "2000");
-        String autoCommit = conf.getStringOrElse(V.KAFKA_AUTO_COMMIT_INTERVAL, "1000");
+        String zookeeper = conf.getStringOrElse(V.KAFKA_ZK_URL);
+        String broker = conf.getStringOrElse(V.KAFKA_BROKER_URL);
+        String groupId = conf.getStringOrElse(V.KAFKA_GROUP_ID);
+        String autoOffsetReset = conf.getStringOrElse(V.KAFKA_AUTO_OFFSET_RESET);
+        String sessionTimeout = conf.getStringOrElse(V.KAFKA_ZK_SESSION_TIMEOUT);
+        String rbMaxRetries = conf.getStringOrElse(V.KAFKA_REBALANCE_MAX_RETRIES);
+        String rbBackOff = conf.getStringOrElse(V.KAFKA_REBALANCE_BACKOFF);
+        String syncTime = conf.getStringOrElse(V.KAFKA_ZK_SYNC_TIME);
+        String autoCommit = conf.getStringOrElse(V.KAFKA_AUTO_COMMIT_INTERVAL);
         Properties props = new Properties();
         props.put("zookeeper.connect", zookeeper);
         props.put("metadata.broker.list", broker);

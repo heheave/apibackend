@@ -7,8 +7,6 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
-import java.util.List;
-import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -30,16 +28,16 @@ public class RedisAccess {
     public RedisAccess(Configure conf) {
         this.conf = conf;
         this.poolConfig = new JedisPoolConfig();
-        int predictMaxActive = conf.getIntOrElse(V.KAFKA_CONSUMER_THREADS, 10) << 1;
+        int predictMaxActive = conf.getIntOrElse(V.KAFKA_REALTIME_CONSUMER_THREADS) << 1;
         int maxActive = conf.getIntOrElse(V.REDIS_MAX_ACTIVE, predictMaxActive);
         int maxIdle = conf.getIntOrElse(V.REDIS_MAX_IDLE, predictMaxActive >> 1);
-        int maxWait = conf.getIntOrElse(V.REDIS_MAX_WAIT, 3000);
-        boolean testOnBorrow = conf.getBooleanOrElse(V.REDIS_TEST_ON_BORROW, false);
+        int maxWait = conf.getIntOrElse(V.REDIS_MAX_WAIT);
+        boolean testOnBorrow = conf.getBooleanOrElse(V.REDIS_TEST_ON_BORROW);
         this.poolConfig.setMaxTotal(maxActive);
         this.poolConfig.setMaxIdle(maxIdle);
         this.poolConfig.setMaxWaitMillis(maxWait);
         this.poolConfig.setTestOnBorrow(testOnBorrow);
-        String redisHost = this.conf.getStringOrElse(V.REDIS_HOST_ADDRESS, "localhost");
+        String redisHost = this.conf.getStringOrElse(V.REDIS_HOST_ADDRESS);
         this.pool = new JedisPool(poolConfig, redisHost);
         this.redisGetLock = new ReentrantLock();
     }

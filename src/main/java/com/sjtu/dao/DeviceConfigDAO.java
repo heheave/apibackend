@@ -2,7 +2,6 @@ package com.sjtu.dao;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.mysql.jdbc.Statement;
-import com.sjtu.pojo.DAOUtil;
 import com.sjtu.pojo.DeviceConfig;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
